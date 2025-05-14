@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.iot.myapplication"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.iot.myapplication"
-        minSdk = 35
-        targetSdk = 35
+        minSdk = 34
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -39,6 +39,11 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.wearable)
+
+    implementation(libs.androidx.lifecycle.service)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.play)
+
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)

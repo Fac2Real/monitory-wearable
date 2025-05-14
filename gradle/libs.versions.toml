@@ -8,13 +8,13 @@ espressoCore = "3.5.1"
 appcompat = "1.6.1"
 playServicesWearable = "19.0.0"
 material = "1.10.0"
-activity = "1.10.1"
+activity = "1.9.0"
 constraintlayout = "2.1.4"
 composeBom = "2024.09.00"
 composeMaterial = "1.2.1"
 composeFoundation = "1.2.1"
 wearToolingPreview = "1.0.0"
-activityCompose = "1.10.1"
+activityCompose = "1.9.0"
 coreSplashscreen = "1.0.1"
 tiles = "1.4.0"
 tilesMaterial = "1.4.0"
@@ -25,6 +25,9 @@ horologistTiles = "0.6.17"
 watchfaceComplicationsDataSourceKtx = "1.2.1"
 
 [libraries]
+androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version = "2.9.0" }
+kotlinx-coroutines-android  = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android",  version = "1.8.1" }
+kotlinx-coroutines-play     = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version = "1.10.2" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.iot.myapplication"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.iot.myapplication"
-        minSdk = 35
-        targetSdk = 35
+        applicationId = "com.iot.myapplication.wear"
+        minSdk = 34
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
