@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.iot.myapplication"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.iot.myapplication"
-        minSdk = 35
-        targetSdk = 35
+        minSdk = 34
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.horologist.compose.tools)
     implementation(libs.horologist.tiles)
     implementation(libs.androidx.watchface.complications.data.source.ktx)
+    // health 요소 사용 https://developer.android.com/jetpack/androidx/releases/health?hl=ko
+    implementation("androidx.health:health-services-client:1.1.0-alpha05")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
