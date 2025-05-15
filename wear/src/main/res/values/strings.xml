@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">My Application</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">From the Square world,\nHello, %1$s!</string>
+    <!-- 화면에 찍힐 제목·본문 -->
+    <string name="worker_info_title">매핑된 작업자 정보 :</string>
+    <string name="worker_info_default">No profile</string>
+
+    <!-- 타일·컴플리케이션 (필요 없으면 지워도 OK) -->
     <string name="tile_label">Example tile</string>
     <string name="complication_label">Example complication</string>
 </resources>

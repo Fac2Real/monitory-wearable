@@ -15,6 +15,16 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
         <service
+            android:name="com.f2r.wear.worker.WorkerInfoListener"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/worker_info" />
+            </intent-filter>
+        </service>
+        <service
             android:name=".complication.MainComplicationService"
             android:exported="true"
             android:label="@string/complication_label"
