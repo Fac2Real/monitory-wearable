@@ -26,6 +26,11 @@
             android:exported="false"
             android:foregroundServiceType="dataSync"
             tools:ignore="MissingClass" />
+        <service
+            android:name="com.f2r.mobile.worker.WearableListener"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            tools:ignore="MissingClass" />
     </application>
 
 </manifest>

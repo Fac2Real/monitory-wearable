@@ -3,11 +3,11 @@ package com.f2r.wear.worker
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.util.Log
+import androidx.core.content.edit
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.WearableListenerService
-import androidx.core.content.edit
 
 class WorkerInfoListener : WearableListenerService() {
     @SuppressLint("WearRecents")
@@ -18,7 +18,7 @@ class WorkerInfoListener : WearableListenerService() {
 
                 val json = DataMapItem.fromDataItem(event.dataItem)
                     .dataMap.getString("payload") ?: return
-
+                Log.d("WorkerInfo", "received: $json")
                 // ① 로컬 저장
                 getSharedPreferences("worker", MODE_PRIVATE)
                     .edit { putString("profile", json) }
@@ -28,9 +28,11 @@ class WorkerInfoListener : WearableListenerService() {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
                     putExtra("profile", json)
                 }
+
                 startActivity(i)
 
                 Log.d("WorkerInfo", "received: $json")
+                buffer.release()
             }
         }
     }

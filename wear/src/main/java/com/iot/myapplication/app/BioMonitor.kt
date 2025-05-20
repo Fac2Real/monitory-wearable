@@ -28,16 +28,9 @@ class BioMonitor(context: Context) {
                 val heartRate = dataPoints.getData(DataType.HEART_RATE_BPM)
                     .firstOrNull()?.value?.toFloat()
 
-//                val spo2 = dataPoints.getData(DataType.)
-//                    .firstOrNull()?.value?.toFloat()
-
-//                val temperature = dataPoints.getData(DataType.)
-//                    .firstOrNull()?.value?.toFloat()
 
                 val bioData = BioData(
                     heartRate = heartRate,
-//                    spo2 = spo2,
-//                    skinTemperature = temperature
                 )
 
                 Log.d("BioMonitor", "🧬 Received: $bioData")
