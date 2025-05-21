@@ -1,4 +1,10 @@
 *.iml
+*.pem
+*.crt
+*.key
+*.ini
+*.apk
+*.json
 .idea/*
 .idea/
 /.idea/
