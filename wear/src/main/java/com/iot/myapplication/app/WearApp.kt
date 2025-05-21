@@ -23,7 +23,7 @@ import com.iot.myapplication.presentation.BioMonitorViewModel
 import com.iot.myapplication.presentation.theme.MyApplicationTheme
 
 @Composable
-fun WearApp(profileJson: String, bioMonitorViewModel: BioMonitorViewModel) {
+fun WearApp(profileId: String,profileName:String, bioMonitorViewModel: BioMonitorViewModel) {
     MyApplicationTheme {
         Scaffold(timeText = { TimeText() } ){
             Box(
@@ -39,7 +39,7 @@ fun WearApp(profileJson: String, bioMonitorViewModel: BioMonitorViewModel) {
                 ){
 //                TimeText()
                     // 프로필 정보
-                    ProfileScreen(profileJson)
+                    ProfileScreen(profileId,profileName)
                     BioDataScreen(bioViewModel = bioMonitorViewModel)
                 }
             }
@@ -49,14 +49,22 @@ fun WearApp(profileJson: String, bioMonitorViewModel: BioMonitorViewModel) {
 }
 
 @Composable
-fun ProfileScreen(profileJson: String) {
+fun ProfileScreen(profileId: String, profileName: String) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp),
         textAlign = TextAlign.Center,
         color = MaterialTheme.colors.primary,
-        text = profileJson
+        text = profileId
+    )
+    Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
+    textAlign = TextAlign.Center,
+    color = MaterialTheme.colors.primary,
+    text = profileName
     )
 }
 

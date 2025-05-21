@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -28,9 +29,19 @@
             tools:ignore="MissingClass" />
         <service
             android:name="com.f2r.mobile.worker.WearableListener"
-            android:exported="false"
-            android:foregroundServiceType="dataSync"
-            tools:ignore="MissingClass" />
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <!--<action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />-->
+                <data android:scheme="wear" />
+                <data android:host="*" />
+                <data android:pathPrefix="/test_path_123" />
+                <data android:pathPrefix="/bio_data" />
+            </intent-filter>
+
+        </service>
     </application>
 
 </manifest>

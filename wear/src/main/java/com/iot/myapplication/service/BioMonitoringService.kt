@@ -13,7 +13,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.iot.myapplication.app.BioDataRepository
 import com.iot.myapplication.app.ProfileManager // ProfileManager는 MainAppController나 서비스 모두에서 사용할 수 있으니 가져와야겠지
-import com.iot.myapplication.data.BioDataSenderToMobile // 데이터 전송 로직
+import com.f2r.wear.worker.BioDataSenderToMobile // 데이터 전송 로직
 import com.iot.myapplication.app.BioDataStatus // BioDataStatus enum 필요
 import com.iot.myapplication.app.BioMonitor
 import com.iot.myapplication.app.RuleBasedFilter
@@ -24,8 +24,12 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import androidx.core.content.edit
 
 // TODO: Manifest에 서비스 등록 및 FOREGROUND_SERVICE, BODY_SENSORS 권한 추가 필수!
+private const val PREFS_BIO_MONITORING = "BioMonitoringPrefs"
+private const val KEY_LAST_NORMAL_SEND_TIME = "lastNormalBioSendTime"
+private const val NORMAL_SEND_INTERVAL_MS = 5 * 60 * 1000L // 예: 5분 (정상 상태 데이터 전송 간격)
 
 class BioMonitoringService : Service() {
 
@@ -42,6 +46,12 @@ class BioMonitoringService : Service() {
     private lateinit var bioDataSender: BioDataSenderToMobile
     private lateinit var profileManager: ProfileManager
 
+    private val sharedPreferences by lazy {
+        applicationContext.getSharedPreferences(PREFS_BIO_MONITORING, Context.MODE_PRIVATE)
+    }
+    override fun onCreate() {
+        super.onCreate()
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "BioMonitoringService - onStartCommand 시작")
@@ -85,15 +95,31 @@ class BioMonitoringService : Service() {
                     // 가공된 데이터를 BioDataRepository에 업데이트
                     BioDataRepository.updateLatestFilteredBioData(filteredData)
                     Log.d(TAG, "FilteredBioData를 BioDataRepository에 발행 완료: ${filteredData.status}")
+                    val workerId = profileManager.getWorkerId(null) // 서비스에서는 Activity Intent 접근 어렵.
+                    val currentTime = System.currentTimeMillis()
+                    val lastNormalSendTime = sharedPreferences.getLong(KEY_LAST_NORMAL_SEND_TIME, 0L)
+
+                    val heartRate = filteredData.originalData.heartRate
+                    val statusString = filteredData.status.toString()
 
                     // 비정상 상태 감지 및 데이터 전송 로직 (서비스에서 수행 유지)
                     if (filteredData.status != BioDataStatus.NORMAL && filteredData.status != BioDataStatus.UNKNOWN) {
                         Log.w(TAG, "서비스 감지: 비정상 생체 상태. 데이터 전송 시작.")
                         // 프로필 정보는 서비스에서 직접 가져오거나 필요한 정보를 미리 서비스로 전달해야 함.
                         // 여기서는 Repository나 SharedPreferences 등 서비스가 접근 가능한 곳에서 가져오는 방식 고려.
-                        val profile = profileManager.getProfile(null) // 서비스에서는 Activity Intent 접근 어렵.
-                        bioDataSender.sendBioData(filteredData.originalData, profile)
+
+                        bioDataSender.sendBioData(filteredData, workerId)
                         // TODO: 위험 알림 발생 로직 (서비스에서 알림 생성 및 표시)
+                    } else if (filteredData.status == BioDataStatus.NORMAL ){
+                        if( currentTime - lastNormalSendTime >= NORMAL_SEND_INTERVAL_MS){
+                            bioDataSender.sendBioData(filteredData, workerId)
+                            sharedPreferences.edit() {
+                                putLong(
+                                    KEY_LAST_NORMAL_SEND_TIME,
+                                    currentTime
+                                )
+                            }
+                        }
                     }
                 }
         }
@@ -109,7 +135,7 @@ class BioMonitoringService : Service() {
     private fun createNotification(): Notification {
         // ... Notification 생성 코드 ...
         // (이전 코드 그대로 사용)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 "Factory Safety Monitoring", // 사용자에게 보이는 채널 이름

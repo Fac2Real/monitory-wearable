@@ -36,6 +36,7 @@ android {
 }
 
 dependencies {
+    val awsSdkVersion = "1.4.86"
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.wearable)
@@ -43,6 +44,13 @@ dependencies {
     implementation(libs.androidx.lifecycle.service)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.play)
+
+    // AWS IOT CORE 통신용
+    implementation("software.amazon.awssdk.iotdevicesdk:aws-iot-device-sdk-android:1.25.0")
+
+
+
+    // FCM 알람 수신용
 
     implementation(libs.material)
     implementation(libs.androidx.activity)

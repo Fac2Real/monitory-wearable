@@ -49,6 +49,9 @@ class MainAppController(private val activity: ComponentActivity, private var int
         // 일단은 MainAppController가 ProfileManager를 관리하고 UI에 전달하는 구조 유지.
         val profileManager = ProfileManager(activity) // 여기서 새로 생성하거나 MainAppController 속성으로 유지
         val profile = profileManager.getProfile(intent)
+        val profileId = profileManager.getWorkerId(intent)
+        val profileName = profileManager.getWorkerName(intent)
+        Log.d("MainAppController","profileId: $profileId, profileName: $profileName")
         Log.d("MainAppController", "showUI() 호출됨.")
 
         activity.setContent {
@@ -57,7 +60,8 @@ class MainAppController(private val activity: ComponentActivity, private var int
             val bioMonitorViewModel: BioMonitorViewModel = androidx.lifecycle.viewmodel.compose.viewModel() // 이 ViewModel이 BioDataRepository를 구독함
 
             WearApp(
-                profileJson = profile, // 프로필 정보 전달
+                profileId = profileId, // 프로필 정보 전달
+                profileName = profileName,
                 bioMonitorViewModel = bioMonitorViewModel // 시스템이 관리하는 ViewModel 인스턴스 전달
             )
         }
