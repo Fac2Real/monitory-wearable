@@ -53,7 +53,7 @@ class WearableListener : WearableListenerService() {
                         val workerId = dataMap.getString("workerId")
                         val dangerLevel = dataMap.getLong("dangerLevel")
                         val sensorType = dataMap.getString("sensorType")
-                        val sensorVal = dataMap.getLong("val")
+                        val sensorVal = dataMap.getFloat("val")
 
                         Log.d(TAG,
                             "Received BioData: workerId=$workerId, HR=$dangerLevel, sensorType=$sensorType, val=$sensorVal")
@@ -76,7 +76,7 @@ class WearableListener : WearableListenerService() {
                             payloadJson.put("val", sensorVal)
 
                             val messagePayload = payloadJson.toString()
-
+                            Log.d("WearableListener", "messagePayload: $messagePayload")
                             // 저장된 wearableIdForTopic을 사용하여 토픽 구성
                             val topic = "wearable/$wearableIdForTopic/a/b/c" // 수정된 토픽
                             AwsIotClientManager.publishMessage(topic, messagePayload)
