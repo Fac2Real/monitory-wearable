@@ -36,6 +36,7 @@ android {
 }
 
 dependencies {
+    val awsSdkVersion = "1.4.86"
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.wearable)
@@ -44,6 +45,20 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.play)
 
+    // AWS IOT CORE 통신용
+    implementation("software.amazon.awssdk.iotdevicesdk:aws-iot-device-sdk-android:1.25.0")
+
+
+
+    // FCM 알람 수신용
+
+
+    // Retrofit (웹 통신용)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // OkHttp (Retrofit이 내부적으로 사용, 명시적으로 추가하여 버전 관리 가능)
+    implementation("com.squareup.okhttp3:okhttp:4.10.0") // 최신 버전 확인
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)

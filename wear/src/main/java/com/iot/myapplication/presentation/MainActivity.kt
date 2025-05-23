@@ -5,85 +5,68 @@
 
 package com.iot.myapplication.presentation
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.TimeText
-import androidx.wear.tooling.preview.devices.WearDevices
-import com.iot.myapplication.R
-import com.iot.myapplication.presentation.theme.MyApplicationTheme
+import com.google.android.gms.wearable.PutDataMapRequest
+import com.google.android.gms.wearable.Wearable
 
+
+import com.iot.myapplication.app.MainAppController
+import java.util.UUID
+import androidx.core.content.edit
+
+private const val WEARABLE_DEVICE_ID_PATH = "/test_path_123" // 웨어러블에서 ID 전송 시 사용한 경로
+private const val TAG = "MainActivityWear" // 로깅을 위한 태그
+private const val PREFS_NAME = "WearAppPrefs" // SharedPreferences 파일 이름
+private const val KEY_WEARABLE_DEVICE_ID = "wearableDeviceId" // SharedPreferences 키
 class MainActivity : ComponentActivity() {
-
-    private fun currentProfile(intent: Intent? = this.intent): String =
-        intent?.getStringExtra("profile")
-            ?: getSharedPreferences("worker", MODE_PRIVATE)
-                .getString("profile", getString(R.string.worker_info_default))
-                ?: getString(R.string.worker_info_default)
-
+    private lateinit var controller: MainAppController
+    private var wearableDeviceId: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
-
         super.onCreate(savedInstanceState)
+        wearableDeviceId = getOrGenerateWearableDeviceId(this)
+        Log.d(TAG, "onCreate: $wearableDeviceId")
 
-        showScreen()
-    }
-    /** Listener 가 SINGLE_TOP 으로 다시 호출할 때 */
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        showScreen(intent)
-    }
+        wearableDeviceId?.let { sendDeviceIdToMobile(it) }
 
-    private fun showScreen(intent: Intent? = null) = setContent {
-        WearApp(profileJson = currentProfile(intent))
-    }
-}
+        controller = MainAppController(this, intent)
+        controller.init()
 
-@Composable
-fun WearApp(profileJson: String) {
-    MyApplicationTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
-            contentAlignment = Alignment.Center
-        ) {
-            TimeText()
-            ProfileScreen(profileJson)
+    }
+    private fun getOrGenerateWearableDeviceId(context: Context): String {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        var deviceId = prefs.getString(KEY_WEARABLE_DEVICE_ID, null)
+        if (deviceId == null) {
+            deviceId = UUID.randomUUID().toString()
+            prefs.edit() { putString(KEY_WEARABLE_DEVICE_ID, deviceId) }
+            Log.i(TAG, "New Wearable Device ID generated and saved: $deviceId")
+        } else {
+            Log.i(TAG, "Loaded existing Wearable Device ID: $deviceId")
+        }
+        return deviceId
+    }
+    private fun sendDeviceIdToMobile(deviceId: String) {
+        val dataClient = Wearable.getDataClient(this)
+        val putDataMapReq = PutDataMapRequest.create(WEARABLE_DEVICE_ID_PATH) // 고유한 경로 사용
+        putDataMapReq.dataMap.putString(KEY_WEARABLE_DEVICE_ID, deviceId)
+        // putDataMapReq.dataMap.putLong("timestamp", System.currentTimeMillis()) // 필요시 타임스탬프 추가
+        val putDataReq = putDataMapReq.asPutDataRequest().setUrgent() // 중요 데이터이므로 urgent 설정
+
+        val task = dataClient.putDataItem(putDataReq)
+        task.addOnSuccessListener {
+            Log.d(TAG, "Device ID ($deviceId) sent to mobile successfully. $WEARABLE_DEVICE_ID_PATH")
+        }.addOnFailureListener { e ->
+            Log.e(TAG, "Failed to send Device ID to mobile.", e)
         }
     }
-}
-
-@Composable
-fun ProfileScreen(profileJson: String) {
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp),
-        textAlign = TextAlign.Center,
-        color = MaterialTheme.colors.primary,
-        text = profileJson
-    )
-}
-
-/* 프리뷰용 기본 값 */
-@Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)
-@Composable
-fun DefaultPreview() {
-    WearApp(profileJson = "No profile")
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        controller.updateIntent(intent)
+    }
 }

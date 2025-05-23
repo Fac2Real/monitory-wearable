@@ -1,6 +1,16 @@
 *.iml
+*.pem
+*.crt
+*.key
+*.ini
+*.apk
+*.json
+.idea/*
+.idea/
+/.idea/
 .gradle
 /local.properties
+/.idea/*
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml

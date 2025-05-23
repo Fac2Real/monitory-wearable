@@ -1,5 +1,6 @@
 [versions]
 agp = "8.9.1"
+iotMqtt = "1.0.0"
 kotlin = "2.0.21"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -26,6 +27,8 @@ watchfaceComplicationsDataSourceKtx = "1.2.1"
 
 [libraries]
 androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version = "2.9.0" }
+aws-core = { module = "aws.sdk.kotlin:aws-core", version.ref = "iotMqtt" }
+iot-mqtt = { module = "aws.sdk.kotlin:iot-mqtt", version.ref = "iotMqtt" }
 kotlinx-coroutines-android  = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android",  version = "1.8.1" }
 kotlinx-coroutines-play     = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version = "1.10.2" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -61,4 +64,3 @@ androidx-watchface-complications-data-source-ktx = { group = "androidx.wear.watc
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-

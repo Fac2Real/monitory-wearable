@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,7 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
+        android:usesCleartextTraffic="true"
         tools:targetApi="34">
+        <activity
+            android:name=".MainActivity2"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -21,11 +32,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name="com.f2r.mobile.worker.WorkerInfoSender"
             android:exported="false"
             android:foregroundServiceType="dataSync"
             tools:ignore="MissingClass" />
+        <service
+            android:name="com.f2r.mobile.worker.WearableListener"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <!-- <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" /> -->
+                <data android:scheme="wear" />
+                <data android:host="*" />
+                <data android:pathPrefix="/test_path_123" />
+                <data android:pathPrefix="/bio_data" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

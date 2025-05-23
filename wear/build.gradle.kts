@@ -9,7 +9,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.iot.myapplication.wear"
+        applicationId = "com.iot.myapplication"
         minSdk = 34
         targetSdk = 34
         versionCode = 1
@@ -55,6 +55,10 @@ dependencies {
     implementation(libs.horologist.compose.tools)
     implementation(libs.horologist.tiles)
     implementation(libs.androidx.watchface.complications.data.source.ktx)
+    // health 요소 사용 https://developer.android.com/jetpack/androidx/releases/health?hl=ko
+    implementation("androidx.health:health-services-client:1.1.0-alpha05")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
