@@ -20,9 +20,9 @@ class BioDataSenderToMobile(private val context:Context) {
             dataMap.apply {
                 filteredBioData.originalData.heartRate?.let {
                     putString("workerId", workerId)
-                    putFloat("heartRate", it)
-                    putLong("status", if (filteredBioData.status.toString() == "NORMAL") 0L else 1L)
-                    putLong("timestamp", System.currentTimeMillis())
+                    putString("sensorType", "heartRate")
+                    putFloat("val", it)
+                    putLong("dangerLevel", if (filteredBioData.status.toString() == "NORMAL") 0L else 1L)
 
                 }
             }

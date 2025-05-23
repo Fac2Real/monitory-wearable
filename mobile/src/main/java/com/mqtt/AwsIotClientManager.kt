@@ -186,5 +186,4 @@ object AwsIotClientManager{
         Log.d(TAG, "AWS IoT Client 스코프 취소")
         clientScope.cancel("Application Shutdown", null)
     }
-
 }

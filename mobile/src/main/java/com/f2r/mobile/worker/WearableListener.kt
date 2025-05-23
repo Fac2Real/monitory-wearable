@@ -51,11 +51,12 @@ class WearableListener : WearableListenerService() {
                         val dataMap = DataMapItem.fromDataItem(event.dataItem).dataMap
 
                         val workerId = dataMap.getString("workerId")
-                        val status = dataMap.getLong("status")
-                        val heartRate = dataMap.getFloat("heartRate")
-                        val timestamp = dataMap.getLong("timestamp")
+                        val dangerLevel = dataMap.getLong("dangerLevel")
+                        val sensorType = dataMap.getString("sensorType")
+                        val sensorVal = dataMap.getLong("val")
 
-                        Log.d(TAG, "Received BioData: workerId=$workerId, HR=$heartRate, status=$status, timestamp=$timestamp")
+                        Log.d(TAG,
+                            "Received BioData: workerId=$workerId, HR=$dangerLevel, sensorType=$sensorType, val=$sensorVal")
 
                         // 저장된 wearable_id 가져오기
                         val wearableIdForTopic = getStoredWearableDeviceId(applicationContext)
@@ -70,13 +71,14 @@ class WearableListener : WearableListenerService() {
                             val payloadJson = JSONObject()
                             payloadJson.put("wearableDeviceId", wearableIdForTopic) // MQTT 페이로드에도 추가 (선택 사항)
                             payloadJson.put("workerId", workerId)
-                            payloadJson.put("status", status)
-                            payloadJson.put("heartRate", heartRate)
-                            payloadJson.put("timestamp", timestamp)
+                            payloadJson.put("dangerLevel", dangerLevel)
+                            payloadJson.put("sensorType", sensorType)
+                            payloadJson.put("val", sensorVal)
+
                             val messagePayload = payloadJson.toString()
 
                             // 저장된 wearableIdForTopic을 사용하여 토픽 구성
-                            val topic = "wearable/$wearableIdForTopic" // 수정된 토픽
+                            val topic = "wearable/$wearableIdForTopic/a/b/c" // 수정된 토픽
                             AwsIotClientManager.publishMessage(topic, messagePayload)
                             Log.d(TAG, "Forwarded BioData to MQTT topic: $topic")
                         } catch (e: Exception) {

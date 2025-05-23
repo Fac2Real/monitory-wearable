@@ -30,8 +30,8 @@ class WorkerInfoSender : LifecycleService() {
             val userJson = WorkerInfo.toJson()
             Log.d("WorkerInfoSender", "pushWorkerInfo: User JSON to send: $userJson") // ② 전송할 JSON 데이터 로그
             // ② DataMap 생성 (≤ 100 kB 권장)
-            val putReq = PutDataMapRequest.create("/worker_info").apply {
-                dataMap.putString("payload", userJson)
+            val putReq = PutDataMapRequest.create("1/worker_info").apply {
+                dataMap.putString("payload", userJson.toString())
                 dataMap.putLong("timestamp", System.currentTimeMillis())
             }.asPutDataRequest()      // 자동 change-ID 삽입
 
