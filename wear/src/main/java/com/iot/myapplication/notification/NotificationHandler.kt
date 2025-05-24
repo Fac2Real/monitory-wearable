@@ -21,8 +21,8 @@ class NotificationHandler(private val context: Context) {
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     companion object {
-        private const val DEFAULT_CHANNEL_ID = "default_channel"
-        private const val CHAT_CHANNEL_ID = "chat_channel"
+        private const val DEFAULT_CHANNEL_ID = "Monitory"
+        private const val CHAT_CHANNEL_ID = "Monitory"
         private var notificationId = 0
     }
 

@@ -1,5 +1,7 @@
 package com.iot.myapplication
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Button
@@ -8,11 +10,15 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 class MainActivity2 : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel // ViewModel 인스턴스 변수 선언
-
+    companion object {
+        private const val NOTIFICATION_PERMISSION_REQUEST_CODE = 1001
+    }
     // UI 요소 변수 선언
     private lateinit var workerInfoTextView: TextView
     private lateinit var mqttStatusTextView: TextView
@@ -21,7 +27,7 @@ class MainActivity2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2) // 위에서 정의한 레이아웃 사용
-
+        requestNotificationPermissionIfNeeded()
         // UI 요소 초기화 (레이아웃 ID에 맞게 수정!)
         workerInfoTextView = findViewById(R.id.workerInfoTextView)
         mqttStatusTextView = findViewById(R.id.mqttStatusTextView)
@@ -71,12 +77,38 @@ class MainActivity2 : AppCompatActivity() {
             mqttStatusTextView.text = status
         })
 
-        // ViewModel의 서비스 초기화 및 시작 함수 호출 (필요하다면)
-        // viewModel.initializeAndStartService() // 만약 Activity 시작 시 서비스도 시작해야 한다면 호출
+    }
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionCheck = ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            )
 
-        // 다른 초기화나 UI 설정...
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    NOTIFICATION_PERMISSION_REQUEST_CODE
+                )
+            }
+        }
     }
 
-    // Activity가 파괴될 때 ViewModel의 onCleared()가 자동으로 호출되어 정리됨.
-    // 따로 onDestroy에서 ViewModel 정리 코드를 호출할 필요는 없어!
+    // (선택) 사용자가 권한 거부했는지 확인하려면 이 콜백도 추가
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한 승인됨
+            } else {
+                // 권한 거부됨
+            }
+        }
+    }
+
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.f2r.mobile.worker.WorkerInfo
 import com.f2r.mobile.worker.WorkerInfoSender
+import com.google.firebase.messaging.FirebaseMessaging
 import com.mqtt.AwsIotClientManager
 import com.retrofit.WorkerLocationRequest
 import com.retrofit.RetrofitClient
@@ -34,6 +35,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         loadWorkerInfoDisplay()
         initializeMqttClient()
         fetchLocationFromServer()
+        fetchFcmToken()
     }
 
     private fun initializeMqttClient(){
@@ -81,6 +83,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 _mqttPublishStatus.postValue("위치 목록 가져오기 중 오류 발생: ${e.message}")
                 Log.e("MainViewModel", "API 호출 중 예외 발생", e)
                 _availableLocations.postValue(emptyList()) // 오류 시 빈 목록 처리
+            }
+        }
+    }
+
+    private fun fetchFcmToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // FCM 토큰 가져오기 성공
+                val token = task.result
+                Log.d("FCMService", "FCM Token: $token")
+            } else {
+                // FCM 토큰 가져오기 실패
+                Log.e("FCMService", "Failed to fetch FCM token", task.exception)
             }
         }
     }
