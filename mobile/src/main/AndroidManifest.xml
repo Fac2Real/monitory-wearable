@@ -52,6 +52,13 @@
                 <data android:pathPrefix="/bio_data" />
             </intent-filter>
         </service>
+        <service
+            android:name=".FCMService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

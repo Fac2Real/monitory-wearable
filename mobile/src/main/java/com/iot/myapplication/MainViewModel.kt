@@ -50,9 +50,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             try{
                 val response = RetrofitClient.instance.getAvailableLocations()
                 if(response.isSuccessful){
-                    val locations = response.body()
+                    val apiResponse = response.body()
 
-                    if(locations != null && locations.isNotEmpty()){
+                    if(apiResponse != null && apiResponse.success){
+                        val locations: List<Location> = apiResponse.data
                         locations.let { _availableLocations.postValue(it) }
                         _mqttPublishStatus.postValue("위치 목록 가져오기 완료! 현재 위치를 선택하세요.")
                         Log.d("MainViewModel","위치 목록 가져오기 완료: ${locations}")

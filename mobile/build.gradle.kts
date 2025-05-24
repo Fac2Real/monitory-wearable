@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -36,8 +37,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.firebase.messaging.ktx)
     val awsSdkVersion = "1.4.86"
-    implementation(libs.androidx.core.ktx)
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.wearable)
 
@@ -51,7 +53,8 @@ dependencies {
 
 
     // FCM 알람 수신용
-
+    implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
+    implementation("com.google.firebase:firebase-analytics")
 
     // Retrofit (웹 통신용)
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

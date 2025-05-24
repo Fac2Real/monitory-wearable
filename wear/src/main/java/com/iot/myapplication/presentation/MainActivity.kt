@@ -7,10 +7,12 @@ package com.iot.myapplication.presentation
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresPermission
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
@@ -27,6 +29,7 @@ private const val KEY_WEARABLE_DEVICE_ID = "wearableDeviceId" // SharedPreferenc
 class MainActivity : ComponentActivity() {
     private lateinit var controller: MainAppController
     private var wearableDeviceId: String? = null
+    @RequiresPermission("android.permission.READ_PRIVILEGED_PHONE_STATE")
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -39,11 +42,12 @@ class MainActivity : ComponentActivity() {
         controller.init()
 
     }
-    private fun getOrGenerateWearableDeviceId(context: Context): String {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    @RequiresPermission("android.permission.READ_PRIVILEGED_PHONE_STATE")
+    private fun getOrGenerateWearableDeviceId(context: Context): String? {
+        val prefs = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         var deviceId = prefs.getString(KEY_WEARABLE_DEVICE_ID, null)
         if (deviceId == null) {
-            deviceId = UUID.randomUUID().toString()
+            deviceId = Build.getSerial()
             prefs.edit() { putString(KEY_WEARABLE_DEVICE_ID, deviceId) }
             Log.i(TAG, "New Wearable Device ID generated and saved: $deviceId")
         } else {
