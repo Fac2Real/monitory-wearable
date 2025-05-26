@@ -1,9 +1,7 @@
 package com.retrofit
 
 import okhttp3.ConnectionSpec
-// import com.your_app_package.BuildConfig // 앱의 BuildConfig를 사용한다고 가정
 import okhttp3.OkHttpClient
-// import okhttp3.TlsVersion // MODERN_TLS 사용 시 직접 명시 필요 없을 수 있음
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,9 +9,9 @@ import software.amazon.awssdk.crt.BuildConfig
 
 object RetrofitClient {
     // 실제 운영 시에는 HTTPS URL 사용
-//    private const val BASE_URL = "https://www.monitory.space/"
+    private const val BASE_URL = "https://www.monitory.space/"
     // 개발 시 로컬 HTTP 서버 테스트용 URL (주석 처리하여 선택)
-     private const val BASE_URL = "http://10.0.2.2:8080/" // 에뮬레이터에서 호스트 PC의 localhost
+//     private const val BASE_URL = "http://10.0.2.2:8080/" // 에뮬레이터에서 호스트 PC의 localhost
 
     // 앱의 BuildConfig.DEBUG를 사용한다고 가정 (import 문 확인 필요)
     // 만약 이 RetrofitClient가 라이브러리 모듈이라면, 초기화 시점에 디버그 여부를 전달받는 것이 좋음

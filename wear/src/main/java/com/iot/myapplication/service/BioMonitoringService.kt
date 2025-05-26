@@ -29,7 +29,7 @@ import androidx.core.content.edit
 // TODO: Manifest에 서비스 등록 및 FOREGROUND_SERVICE, BODY_SENSORS 권한 추가 필수!
 private const val PREFS_BIO_MONITORING = "BioMonitoringPrefs"
 private const val KEY_LAST_NORMAL_SEND_TIME = "lastNormalBioSendTime"
-private const val NORMAL_SEND_INTERVAL_MS = 5 * 60 * 1000L // 예: 5분 (정상 상태 데이터 전송 간격)
+private const val NORMAL_SEND_INTERVAL_MS = 1 * 60 * 1000L // 예: 5분 (정상 상태 데이터 전송 간격)
 
 class BioMonitoringService : Service() {
 

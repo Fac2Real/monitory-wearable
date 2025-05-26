@@ -36,6 +36,9 @@ class MainActivity2 : AppCompatActivity() {
         // ViewModelProvider를 사용해서 ViewModel 인스턴스 가져오기! ⭐ 여기가 중요 ⭐
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
+        // 0. wearable로 자신이 정보 보내기
+        viewModel.initializeAndStartService()
+
         // ViewModel의 LiveData 관찰 (Observe) 시작!
 
         // 1. 사용 가능한 위치 목록 (availableLocations) 관찰

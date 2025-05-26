@@ -88,13 +88,8 @@ fun BioDataScreen(bioViewModel: BioMonitorViewModel) {
                 text = "HR: ${filteredData.originalData.heartRate?.toString() ?: "N/A"} BPM",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.body1,
-                color = MaterialTheme.colors.primary
+                color = if (filteredData.status == BioDataStatus.NORMAL) MaterialTheme.colors.primary else MaterialTheme.colors.error
             )
-            if (filteredData.status != BioDataStatus.NORMAL && filteredData.status != BioDataStatus.UNKNOWN && filteredData.reason != null) {
-                Text(
-                    text = "사유: ${filteredData.reason}"
-                )
-            }
         } ?: run {
             Text(
                 text = "데이터 수신 중..."

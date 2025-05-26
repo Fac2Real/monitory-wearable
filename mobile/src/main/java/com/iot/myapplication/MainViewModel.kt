@@ -126,7 +126,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 Log.d("MainViewModel", "${location.zoneName} 위치 정보 POST 성공. 요청: $requestBody")
 
                 // UI에 현재 선택된 위치를 표시하는 로직 (기존과 유사하게 유지 가능)
-                _workerPayloadText.postValue("현재 작업자 정보:\n${WorkerInfo.toJson()}\n마지막 보고 위치: ${location.zoneName} (POST)")
+                _workerPayloadText.postValue("현재 작업자 ID:\n${WorkerInfo.toJson().get("workerId")}\n" +
+                        "현재 작업자명:\n${WorkerInfo.toJson().get("name")}\n"+
+
+                        "마지막 보고 위치: ${location.zoneName} (POST)")
             } else {
                 // POST 요청 실패 (HTTP 오류 코드)
                 val errorBody = response.errorBody()?.string() ?: "알 수 없는 오류"
@@ -150,7 +153,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
     private fun loadWorkerInfoDisplay() {
-        _workerPayloadText.value = "현재 작업자 정보:\n${WorkerInfo.toJson()}"
+        _workerPayloadText.value = "현재 작업자 ID: ${WorkerInfo.toJson().get("workerId")}\n" +
+                "현재 작업자명: ${WorkerInfo.toJson().get("name")}\n"
     }
 
     override fun onCleared() {

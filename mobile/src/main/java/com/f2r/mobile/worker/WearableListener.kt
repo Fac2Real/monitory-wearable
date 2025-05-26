@@ -60,7 +60,6 @@ class WearableListener : WearableListenerService() {
 
                         // 저장된 wearable_id 가져오기
                         val wearableIdForTopic = getStoredWearableDeviceId(applicationContext)
-
                         if (wearableIdForTopic == null) {
                             Log.e(TAG, "Wearable ID not found in SharedPreferences. Cannot create MQTT topic.")
                             // ID가 없으면 MQTT 전송을 시도하지 않거나, 기본 토픽 등을 사용할 수 있음
