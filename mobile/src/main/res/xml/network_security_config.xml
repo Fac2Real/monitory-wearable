@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">www.monitory.space</domain>
         <domain includeSubdomains="true">10.0.2.2</domain> <!-- Android 에뮬레이터에서 호스트 머신의 localhost를 가리킴 -->
     </domain-config>
 </network-security-config>

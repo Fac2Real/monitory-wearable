@@ -1,5 +1,7 @@
 [versions]
 agp = "8.9.1"
+coreKtxVersion = "1.16.0"
+firebaseBom = "33.14.0"
 iotMqtt = "1.0.0"
 kotlin = "2.0.21"
 coreKtx = "1.10.1"
@@ -24,10 +26,15 @@ tilesToolingPreview = "1.4.0"
 horologistComposeTools = "0.6.17"
 horologistTiles = "0.6.17"
 watchfaceComplicationsDataSourceKtx = "1.2.1"
+firebaseMessagingKtx = "24.1.1"
 
 [libraries]
+androidx-core-ktx-v1160 = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
 androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version = "2.9.0" }
 aws-core = { module = "aws.sdk.kotlin:aws-core", version.ref = "iotMqtt" }
+core-ktx = { module = "androidx.core:core-ktx" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 iot-mqtt = { module = "aws.sdk.kotlin:iot-mqtt", version.ref = "iotMqtt" }
 kotlinx-coroutines-android  = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android",  version = "1.8.1" }
 kotlinx-coroutines-play     = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version = "1.10.2" }
@@ -59,6 +66,7 @@ androidx-tiles-tooling-preview = { group = "androidx.wear.tiles", name = "tiles-
 horologist-compose-tools = { group = "com.google.android.horologist", name = "horologist-compose-tools", version.ref = "horologistComposeTools" }
 horologist-tiles = { group = "com.google.android.horologist", name = "horologist-tiles", version.ref = "horologistTiles" }
 androidx-watchface-complications-data-source-ktx = { group = "androidx.wear.watchface", name = "watchface-complications-data-source-ktx", version.ref = "watchfaceComplicationsDataSourceKtx" }
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

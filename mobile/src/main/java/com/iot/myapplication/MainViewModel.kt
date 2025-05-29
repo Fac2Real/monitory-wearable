@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.f2r.mobile.worker.WorkerInfo
 import com.f2r.mobile.worker.WorkerInfoSender
+import com.google.firebase.messaging.FirebaseMessaging
 import com.mqtt.AwsIotClientManager
 import com.retrofit.WorkerLocationRequest
 import com.retrofit.RetrofitClient
@@ -34,6 +35,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         loadWorkerInfoDisplay()
         initializeMqttClient()
         fetchLocationFromServer()
+        fetchFcmToken()
     }
 
     private fun initializeMqttClient(){
@@ -50,9 +52,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             try{
                 val response = RetrofitClient.instance.getAvailableLocations()
                 if(response.isSuccessful){
-                    val locations = response.body()
+                    val apiResponse = response.body()
 
-                    if(locations != null && locations.isNotEmpty()){
+                    if(apiResponse != null && apiResponse.success){
+                        val locations: List<Location> = apiResponse.data
                         locations.let { _availableLocations.postValue(it) }
                         _mqttPublishStatus.postValue("위치 목록 가져오기 완료! 현재 위치를 선택하세요.")
                         Log.d("MainViewModel","위치 목록 가져오기 완료: ${locations}")
@@ -83,6 +86,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    private fun fetchFcmToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // FCM 토큰 가져오기 성공
+                val token = task.result
+                Log.d("FCMService", "FCM Token: $token")
+            } else {
+                // FCM 토큰 가져오기 실패
+                Log.e("FCMService", "Failed to fetch FCM token", task.exception)
+            }
+        }
+    }
     fun initializeAndStartService(){
         viewModelScope.launch {
             val serviceIntent = Intent(appContext, WorkerInfoSender::class.java)
@@ -110,7 +126,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 Log.d("MainViewModel", "${location.zoneName} 위치 정보 POST 성공. 요청: $requestBody")
 
                 // UI에 현재 선택된 위치를 표시하는 로직 (기존과 유사하게 유지 가능)
-                _workerPayloadText.postValue("현재 작업자 정보:\n${WorkerInfo.toJson()}\n마지막 보고 위치: ${location.zoneName} (POST)")
+                _workerPayloadText.postValue("현재 작업자 ID:\n${WorkerInfo.toJson().get("workerId")}\n" +
+                        "현재 작업자명:\n${WorkerInfo.toJson().get("name")}\n"+
+
+                        "마지막 보고 위치: ${location.zoneName} (POST)")
             } else {
                 // POST 요청 실패 (HTTP 오류 코드)
                 val errorBody = response.errorBody()?.string() ?: "알 수 없는 오류"
@@ -134,7 +153,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
     private fun loadWorkerInfoDisplay() {
-        _workerPayloadText.value = "현재 작업자 정보:\n${WorkerInfo.toJson()}"
+        _workerPayloadText.value = "현재 작업자 ID: ${WorkerInfo.toJson().get("workerId")}\n" +
+                "현재 작업자명: ${WorkerInfo.toJson().get("name")}\n"
     }
 
     override fun onCleared() {

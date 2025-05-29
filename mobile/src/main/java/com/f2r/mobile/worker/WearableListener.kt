@@ -53,14 +53,13 @@ class WearableListener : WearableListenerService() {
                         val workerId = dataMap.getString("workerId")
                         val dangerLevel = dataMap.getLong("dangerLevel")
                         val sensorType = dataMap.getString("sensorType")
-                        val sensorVal = dataMap.getLong("val")
+                        val sensorVal = dataMap.getFloat("val")
 
                         Log.d(TAG,
                             "Received BioData: workerId=$workerId, HR=$dangerLevel, sensorType=$sensorType, val=$sensorVal")
 
                         // 저장된 wearable_id 가져오기
                         val wearableIdForTopic = getStoredWearableDeviceId(applicationContext)
-
                         if (wearableIdForTopic == null) {
                             Log.e(TAG, "Wearable ID not found in SharedPreferences. Cannot create MQTT topic.")
                             // ID가 없으면 MQTT 전송을 시도하지 않거나, 기본 토픽 등을 사용할 수 있음
@@ -76,7 +75,7 @@ class WearableListener : WearableListenerService() {
                             payloadJson.put("val", sensorVal)
 
                             val messagePayload = payloadJson.toString()
-
+                            Log.d("WearableListener", "messagePayload: $messagePayload")
                             // 저장된 wearableIdForTopic을 사용하여 토픽 구성
                             val topic = "wearable/$wearableIdForTopic/a/b/c" // 수정된 토픽
                             AwsIotClientManager.publishMessage(topic, messagePayload)

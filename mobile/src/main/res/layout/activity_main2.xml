@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity2">
+
+    <!-- 작업자 정보 표시 TextView -->
+    <TextView
+        android:id="@+id/workerInfoTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="작업자 정보 로딩 중..."
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <!-- 상태 메시지 표시 TextView -->
+    <TextView
+        android:id="@+id/mqttStatusTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="상태: 대기 중"
+        android:textAppearance="?attr/textAppearanceListItemSecondary" />
+
+    <!-- 위치 선택 버튼들이 동적으로 추가될 LinearLayout 컨테이너 -->
+    <!-- 가로 스크롤을 위해 HorizontalScrollView로 감쌀 수 있습니다. -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:id="@+id/locationButtonsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+    <!-- 필요하다면 여기에 다른 UI 요소들을 추가할 수 있습니다. -->
+
+</LinearLayout>
