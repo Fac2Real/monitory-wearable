@@ -19,7 +19,9 @@ private const val BIO_DATA_PATH = "/bio_data" // 생체 데이터 경로
 private const val MOBILE_PREFS_NAME = "MobileAppPrefs"
 private const val KEY_STORED_WEARABLE_ID = "storedWearableDeviceId" // 모바일 앱에 저장할 웨어러블 ID 키
 
+
 class WearableListener : WearableListenerService() {
+    private lateinit var workerInfoSender: WorkerInfoSender
 
     override fun onDataChanged(dataEvents: DataEventBuffer) {
         Log.d(TAG, "onDataChanged received ${dataEvents.count} events")
@@ -63,6 +65,7 @@ class WearableListener : WearableListenerService() {
                         if (wearableIdForTopic == null) {
                             Log.e(TAG, "Wearable ID not found in SharedPreferences. Cannot create MQTT topic.")
                             // ID가 없으면 MQTT 전송을 시도하지 않거나, 기본 토픽 등을 사용할 수 있음
+                            workerInfoSender.requestWearableIdFromWear(this)
                             return@forEach // 또는 다른 오류 처리
                         }
 
@@ -111,4 +114,5 @@ class WearableListener : WearableListenerService() {
         super.onDestroy()
         Log.d(TAG, "WearableListenerService destroyed")
     }
+
 }

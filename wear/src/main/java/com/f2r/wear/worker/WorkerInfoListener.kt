@@ -7,8 +7,12 @@ import androidx.core.content.edit
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMapItem
+import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 import org.json.JSONObject
+
+
+private const val RESPONSE_WEARABLE_ID_PATH = "/response_wearable_id"
 
 class WorkerInfoListener : WearableListenerService() {
     var workerId: String? = null
@@ -46,6 +50,16 @@ class WorkerInfoListener : WearableListenerService() {
                 Log.d("WorkerInfo", "received: $json")
                 buffer.release()
             }
+        }
+    }
+
+    override fun onMessageReceived(messageEvent: MessageEvent) {
+        if (messageEvent.path == RESPONSE_WEARABLE_ID_PATH) {
+            val wearableId = String(messageEvent.data)
+            Log.d("MobileApp", "Received Wearable ID: $wearableId")
+            // MQTT 전송 또는 다른 작업 수행
+            val wearableIdSender = WearableIdSender()
+            wearableIdSender.sendDeviceIdToMobile()
         }
     }
 }
