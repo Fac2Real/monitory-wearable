@@ -3,6 +3,7 @@ name: Android Build and Deploy
 on:
   push:
     branches:
+      - main
       - develop
 
 jobs:
