@@ -10,7 +10,6 @@ on:
       - main
       - develop
 
-
 jobs:
   build-android-app:
     name: Build Android APK
@@ -24,10 +23,25 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'temurin' # 또는 'corretto'
+          distribution: 'temurin'
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
+
+
+      - name: Restore google-services.json from raw secret
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICE_JSON }}" > mobile/src/main/google-services.json
+
+      - name: Write raw PEM to file (⚠️ 위험할 수 있음)
+        run: |
+          mkdir -p mobile/src/main/assets
+          echo "${{ secrets.IOT_CERTIFICATE }}" > mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
+          chmod 600 mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
+          
+          echo "${{ secrets.PRIVATE_PEM }}" > mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
+          chmod 600 mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
+      
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
