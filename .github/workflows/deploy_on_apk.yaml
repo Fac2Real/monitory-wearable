@@ -36,7 +36,7 @@ jobs:
           echo "Attempting to write google-services.json..."
           # 절대 경로 대신 상대 경로를 사용하는 것이 더 일반적입니다.
           # GitHub Actions의 working-directory는 기본적으로 체크아웃된 리포지토리 루트입니다.
-          TARGET_FILE="./mobile/src/main/google-services.json"
+          TARGET_FILE=""
           
           # Secret 내용이 비어있는지 확인 (디버깅)
           if [ -z "${{ secrets.GOOGLE_SERVICE_JSON }}" ]; then
@@ -44,15 +44,15 @@ jobs:
             exit 1
           fi
           
-          echo "${{ secrets.GOOGLE_SERVICE_JSON }}" > $TARGET_FILE
+          echo "${{ secrets.GOOGLE_SERVICE_JSON }}" > ./mobile/src/main/google-services.json
           
           echo "google-services.json created. Verifying file:"
-          ls -l $TARGET_FILE # 파일 존재 및 크기 확인
+          ls -l ./mobile/src/main/google-services.json # 파일 존재 및 크기 확인
           echo "First 5 lines of google-services.json:"
-          head -n 5 $TARGET_FILE # 파일 내용 앞부분 확인 (Secret 내용 노출 주의, 디버깅 후 민감하면 cat 전체 대신 head 사용)
+          head -n 5 ./mobile/src/main/google-services.json # 파일 내용 앞부분 확인 (Secret 내용 노출 주의, 디버깅 후 민감하면 cat 전체 대신 head 사용)
           # 파일이 비어있지 않은지 확인
-          if [ ! -s $TARGET_FILE ]; then
-            echo "Error: $TARGET_FILE is empty after writing from secret."
+          if [ ! -s ./mobile/src/main/google-services.json ]; then
+            echo "Error: ./mobile/src/main/google-services.json is empty after writing from secret."
             exit 1
           fi
         # shell: bash # 명시적으로 bash 사용 (기본값이지만)
@@ -63,21 +63,17 @@ jobs:
           mkdir -p ./mobile/src/main/assets
           
           # IOT Certificate
-          IOT_CERT_FILE="./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt"
           if [ -z "${{ secrets.IOT_CERTIFICATE }}" ]; then echo "Error: Secret IOT_CERTIFICATE is empty."; exit 1; fi
-          echo "${{ secrets.IOT_CERTIFICATE }}" > $IOT_CERT_FILE
-          chmod 600 $IOT_CERT_FILE
-          echo "IOT Certificate created: $IOT_CERT_FILE"
-          ls -l $IOT_CERT_FILE
+          echo "${{ secrets.IOT_CERTIFICATE }}" > ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
+          chmod 600 ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
+          ls -l ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
 
           # Private PEM
-          PRIVATE_PEM_FILE="./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt"
           if [ -z "${{ secrets.PRIVATE_PEM }}" ]; then echo "Error: Secret PRIVATE_PEM is empty."; exit 1; fi
-          echo "${{ secrets.PRIVATE_PEM }}" > $PRIVATE_PEM_FILE
-          chmod 600 $PRIVATE_PEM_FILE
-          echo "Private PEM created: $PRIVATE_PEM_FILE"
-          ls -l $PRIVATE_PEM_FILE
-          
+          echo "${{ secrets.PRIVATE_PEM }}" > ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
+          chmod 600 ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
+          ls -l ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
+
       - name: Build Debug APK
         # 모듈 이름을 명시하는 것이 더 정확할 수 있습니다.
         # 예: ./gradlew :mobile:assembleDebug 또는 ./gradlew mobile:assembleDebug
