@@ -31,16 +31,16 @@ jobs:
 
       - name: Restore google-services.json from raw secret
         run: |
-          echo "${{ secrets.GOOGLE_SERVICE_JSON }}" > mobile/src/main/google-services.json
-
+          echo "${{ secrets.GOOGLE_SERVICE_JSON }}" > /home/runner/work/monitory-wearable/monitory-wearable/mobile/src/main/google-services.json
+          chmod 644 /home/runner/work/monitory-wearable/monitory-wearable/mobile/src/main/google-services.json
       - name: Write raw PEM to file (⚠️ 위험할 수 있음)
         run: |
           mkdir -p mobile/src/main/assets
-          echo "${{ secrets.IOT_CERTIFICATE }}" > mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
-          chmod 600 mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
+          echo "${{ secrets.IOT_CERTIFICATE }}" > /home/runner/work/monitory-wearable/monitory-wearable/mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
+          chmod 644 /home/runner/work/monitory-wearable/monitory-wearable/mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
           
-          echo "${{ secrets.PRIVATE_PEM }}" > mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
-          chmod 600 mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
+          echo "${{ secrets.PRIVATE_PEM }}" > /home/runner/work/monitory-wearable/monitory-wearable/mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
+          chmod 644 /home/runner/work/monitory-wearable/monitory-wearable/mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
       
 
       - name: Build Debug APK
