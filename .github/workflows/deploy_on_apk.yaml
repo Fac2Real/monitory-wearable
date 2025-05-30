@@ -10,7 +10,6 @@ on:
       - main
       - develop
 
-
 jobs:
   build-android-app:
     name: Build Android APK
@@ -24,16 +23,65 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'temurin' # 또는 'corretto'
+          distribution: 'temurin'
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
+      - name: Create google-services.json directory
+        run: mkdir -p ./mobile/src/main # 상대 경로 사용 및 디렉토리 생성 보장
+
+      - name: Restore google-services.json from secret
+        run: |
+          echo "Attempting to write google-services.json..."
+          # 절대 경로 대신 상대 경로를 사용하는 것이 더 일반적입니다.
+          # GitHub Actions의 working-directory는 기본적으로 체크아웃된 리포지토리 루트입니다.
+          TARGET_FILE=""
+          
+          # Secret 내용이 비어있는지 확인 (디버깅)
+          if [ -z "${{ secrets.GOOGLE_SERVICE_JSON }}" ]; then
+            echo "Error: Secret GOOGLE_SERVICE_JSON is empty or not set."
+            exit 1
+          fi
+          
+          echo "${{ secrets.GOOGLE_SERVICE_JSON }}" > ./mobile/src/main/google-services.json
+          
+          echo "google-services.json created. Verifying file:"
+          ls -l ./mobile/src/main/google-services.json # 파일 존재 및 크기 확인
+          echo "First 5 lines of google-services.json:"
+          head -n 5 ./mobile/src/main/google-services.json # 파일 내용 앞부분 확인 (Secret 내용 노출 주의, 디버깅 후 민감하면 cat 전체 대신 head 사용)
+          # 파일이 비어있지 않은지 확인
+          if [ ! -s ./mobile/src/main/google-services.json ]; then
+            echo "Error: ./mobile/src/main/google-services.json is empty after writing from secret."
+            exit 1
+          fi
+        # shell: bash # 명시적으로 bash 사용 (기본값이지만)
+
+      # IOT 인증서 파일 생성 부분 (기존과 동일하게 유지하되, 경로 일관성을 위해 상대경로로 변경 가능)
+      - name: Write PEM files from secrets
+        run: |
+          mkdir -p ./mobile/src/main/assets
+          
+          # IOT Certificate
+          if [ -z "${{ secrets.IOT_CERTIFICATE }}" ]; then echo "Error: Secret IOT_CERTIFICATE is empty."; exit 1; fi
+          echo "${{ secrets.IOT_CERTIFICATE }}" > ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
+          chmod 600 ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
+          ls -l ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-certificate.pem.crt
+
+          # Private PEM
+          if [ -z "${{ secrets.PRIVATE_PEM }}" ]; then echo "Error: Secret PRIVATE_PEM is empty."; exit 1; fi
+          echo "${{ secrets.PRIVATE_PEM }}" > ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
+          chmod 600 ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
+          ls -l ./mobile/src/main/assets/c060311b74ab5d78e0c9918acc72ebeb07d4d48accfab78d7296dae0e3718872-private.pem.crt
+
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
+        # 모듈 이름을 명시하는 것이 더 정확할 수 있습니다.
+        # 예: ./gradlew :mobile:assembleDebug 또는 ./gradlew mobile:assembleDebug
+        run: ./gradlew :mobile:assembleDebug # 또는 프로젝트 구조에 맞게 수정
 
       - name: Upload Debug APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          # 모듈 이름이 'mobile'이므로 경로도 mobile로 시작해야 할 가능성이 높습니다.
+          path: mobile/build/outputs/apk/debug/mobile-debug.apk # 실제 APK 경로 확인 필요
