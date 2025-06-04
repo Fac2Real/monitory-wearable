@@ -16,8 +16,16 @@ pipeline {
 
   stages {
 
-    stage('Checkout') {
-      steps { checkout scm }
+    stage('Checkout & Environment Setup') {
+      steps {
+        checkout scm
+        script {
+          def rawUrl = sh(script: "git config --get remote.origin.url",
+                        returnStdout: true).trim()
+          env.REPO_URL = rawUrl.replaceAll(/\.git$/, '')
+          env.COMMIT_MSG = sh(script: "git log -1 --pretty=format:'%s'",returnStdout: true).trim()
+        }
+      }
     }
 
     /* google-services.json & PEM 파일 복원 */
