@@ -97,8 +97,6 @@ monitory-wearable/
 
 ### 모바일 앱 (Android)
 - **Kotlin**: 메인 개발 언어
-- **Android Jetpack**: 현대적인 Android 개발 프레임워크
-- **MVVM 패턴**: ViewModel을 통한 UI-비즈니스 로직 분리
 - **Retrofit**: REST API 통신
 - **AWS IoT SDK**: MQTT 프로토콜 기반 AWS IoT Core 연결
 - **Google Play Services**: Wearable Data Layer API
@@ -108,13 +106,8 @@ monitory-wearable/
 - **Kotlin**: 메인 개발 언어
 - **Wear OS**: Google 웨어러블 플랫폼
 - **Health Services API**: 생체 데이터 수집
-- **Compose for Wear OS**: 현대적인 UI 프레임워크
+- **Compose for Wear OS**: UI 프레임워크
 - **Wearable Data Layer**: 모바일과 데이터 동기화
-
-### 인프라
-- **AWS IoT Core**: MQTT 브로커 및 디바이스 관리
-- **Firebase**: FCM 푸시 알림 서비스
-- **REST API**: 백엔드 서버와의 HTTP 통신
 
 ---
 
