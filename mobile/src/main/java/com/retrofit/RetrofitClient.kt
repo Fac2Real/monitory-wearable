@@ -1,5 +1,6 @@
 package com.retrofit
 
+import com.google.gson.GsonBuilder
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -9,7 +10,7 @@ import software.amazon.awssdk.crt.BuildConfig
 
 object RetrofitClient {
     // 실제 운영 시에는 HTTPS URL 사용
-    private const val BASE_URL = "https://www.monitory.space/"
+    private const val BASE_URL = "https://api.monitory.space/"
     // 개발 시 로컬 HTTP 서버 테스트용 URL (주석 처리하여 선택)
 //     private const val BASE_URL = "http://10.0.2.2:8080/" // 에뮬레이터에서 호스트 PC의 localhost
 
@@ -46,11 +47,14 @@ object RetrofitClient {
         }
     }.build()
 
+    val gson = GsonBuilder()
+        .setLenient()
+        .create()
     val instance: ApiService by lazy {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         retrofit.create(ApiService::class.java)
     }

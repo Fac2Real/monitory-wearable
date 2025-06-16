@@ -31,11 +31,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _mqttPublishStatus = MutableLiveData<String>()
     val mqttPublishStatus: LiveData<String> = _mqttPublishStatus
 
+
     init {
         loadWorkerInfoDisplay()
         initializeMqttClient()
         fetchLocationFromServer()
-        fetchFcmToken()
+//        fetchFcmToken()
     }
 
     private fun initializeMqttClient(){
@@ -87,18 +88,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun fetchFcmToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                // FCM 토큰 가져오기 성공
-                val token = task.result
-                Log.d("FCMService", "FCM Token: $token")
-            } else {
-                // FCM 토큰 가져오기 실패
-                Log.e("FCMService", "Failed to fetch FCM token", task.exception)
-            }
-        }
-    }
     fun initializeAndStartService(){
         viewModelScope.launch {
             val serviceIntent = Intent(appContext, WorkerInfoSender::class.java)

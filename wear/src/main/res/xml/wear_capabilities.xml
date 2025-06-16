@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="android_wear_capabilities">
+        <item>wear_app_capability</item>
+        <!-- 필요하다면 다른 capability 추가 -->
+    </string-array>
+</resources>

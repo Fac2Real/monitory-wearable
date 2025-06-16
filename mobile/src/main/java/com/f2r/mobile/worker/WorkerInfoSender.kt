@@ -1,5 +1,6 @@
 package com.f2r.mobile.worker
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LifecycleService
 import com.google.android.gms.common.api.ApiException
@@ -14,14 +15,28 @@ import kotlinx.coroutines.tasks.await
  * 모바일에 할당된 사용자 프로필을 워치에 1회 푸시해 매핑한다.
  * Hard-coded sample – replace with DB / API later.
  */
+
+private const val REQUEST_WEARABLE_ID_PATH = "/request_wearable_id"
+
 class WorkerInfoSender : LifecycleService() {
 
     private val scope = CoroutineScope(Dispatchers.IO)
     private val dataClient by lazy { Wearable.getDataClient(this) }
-
+    private val messageClient by lazy { Wearable.getMessageClient(this) }
     override fun onCreate() {
         super.onCreate()
         scope.launch { pushWorkerInfo() }
+    }
+    fun requestWearableIdFromWear(context: Context) {
+        messageClient.sendMessage(
+            "wear_node_id", // Wear OS 기기의 노드 ID (연결된 노드에서 가져옴)
+            REQUEST_WEARABLE_ID_PATH,
+            null // 메시지에 추가 데이터가 필요하지 않으면 null
+        ).addOnSuccessListener {
+            Log.d("MobileApp", "Wearable ID request sent successfully.")
+        }.addOnFailureListener { e ->
+            Log.e("MobileApp", "Failed to send Wearable ID request.", e)
+        }
     }
 
     private suspend fun pushWorkerInfo() {
